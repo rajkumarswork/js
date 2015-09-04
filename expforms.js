@@ -3,7 +3,11 @@ var path = require('path')
 var bodyparser = require('body-parser')
 
 var app = express();
-app.use( bodyparser.urlencoded({extended: false}));
+
+// middleware that populates req.body if you want to use that 
+var jsonParser = bodyparser.json()
+var urlencodedParser = bodyparser.urlencoded( {extended: false } )
+
 
 // Static pages from directory public served at '/'
 app.use('/', express.static('public'));
@@ -18,7 +22,7 @@ app.get('/form', function( q, p ){
               '</form>';
   p.send( html );
 });
-app.post('/', function(q, p){
+app.post('/', urlencodedParser, function(q, p){
   var u = q.body.user.split('').reverse().join('');
   var html =  'Hi: ' + u + '<br>' +
               '<a href="/form">Try again</a>';
@@ -60,5 +64,12 @@ var jdata = {
   }
   ]
 };
+
+// Post processing
+app.post('/json', jsonParser, function(q, p){
+  var u = q.body;
+  console.log( u );
+  p.send( u )
+});
 
 app.listen( 3000 ); 

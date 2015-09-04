@@ -21,18 +21,29 @@
           <td>{{ x.Country }}</td>
         </tr>
       </table>
-      <p>Name: <input type="text" ng-model="name"></p>
-      <p>Exp: {{ name }}</p>
 
-
+      <form>
+        Name: <input type="text" ng-model="user.name"><br>
+        Country: <input type="text" ng-model="user.country"><br>
+        <button ng-click="reset()">Reset</button><br>
+      </form>
+      <p>form={{user}}</p>
       <script>
-var app = angular.module('myapp', []);
-app.controller('myctrl', function( $scope, $http ){
-  $http.get("http://localhost:3000/json")
-    .success( function(p) {
-      $scope.names = p.records;
-    });
-});
+        var app = angular.module('myapp', []);
+        app.controller('myctrl', function( $scope, $http ){
+          var get = $http.get("http://localhost:3000/json")
+          get.success( function(p) {
+            $scope.names = p.records;
+          });
+          $scope.reset=function(){
+            var u = $scope.user
+            console.log( u ) 
+            var post = $http.post("http://localhost:3000/json", u );
+            post.success( function( data, status, head, cfg ){
+          });
+          $scope.reset();
+          };
+        });
       </script>
     </div>
 
